@@ -126,6 +126,8 @@ def bonus_collector(br):
 
 def view_town(br):
 	try:
+		webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
+		webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
 		search = br.find_element_by_css_selector(".city_overview div")
 		search.click()
 		print("The City is being inspected.")
@@ -135,6 +137,8 @@ def view_town(br):
 
 def view_island(br):
 	try:
+		webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
+		webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
 		search = br.find_element_by_css_selector(".island_view div")
 		search.click()
 		search = br.find_element_by_css_selector(".btn_jump_to_town div")
