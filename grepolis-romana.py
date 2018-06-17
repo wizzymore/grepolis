@@ -10,11 +10,12 @@ from selenium.webdriver.chrome.options import Options
 ###############
 #SETTING UP THINGS
 ###############
+url = "https://ro.grepolis.com/"
 print('################ GREPOLIS  BOT by WiiZZy')
-username = input('Utilizator: ')
+username = input('Nume de utilizator: ')
 password = input('Parola: ')
-selected_town = input('Numele orasului( 0 pentru a nu selecta un oras ): ')
-towns_number = int(input('Numar de orase: '))
+selected_town = input("Numele orasului( 0 pentru a nu selecta un oras principal ): ")
+towns_number = int(input('Numarul de orase: '))
 world_number = int(input('Lumea numarul: '))
 
 
@@ -56,7 +57,7 @@ def get_city_name(br):
 		name = br.find_element_by_css_selector(".town_name").text
 		return name
 	except:
-		print("Numele orasului nu a putut fi gasit.")
+		print("Numele orasului nu a fost gaist.")
 		enter_world(br)
 
 
@@ -79,7 +80,7 @@ def next_town(br):
 def find_town(br):
 	while(True):
 		if(get_city_name(br) == selected_town or selected_town == '0'):
-			print("Gasit!")
+			print("Oras gasit.")
 			break
 		else:
 			next_town(br)
@@ -93,7 +94,7 @@ def enter_world(br):
 				i.click()
 			a += 1
 	except:
-		print("Eroare la pornirea jocului..\nSe reincearca..")
+		print("Eroare la inceperea jocului..\nSe reincearca..")
 		time.sleep(5)
 		enter_world(br)
 
@@ -111,7 +112,8 @@ def login(br):
 	except:
 		print("Eroare de autentificare..")
 		time.sleep(5)
-		#login(br)
+		br.get(url)
+		login(br)
 
 
 def bonus_collector(br):
@@ -120,17 +122,17 @@ def bonus_collector(br):
 		search.click()
 		time.sleep(5)
 	except:
-		print("Bonusul zilnic nu este disponibil.")
+		print("Bonusul Zilnic nu este valabil.")
 
 
 def view_town(br):
 	try:
 		search = br.find_element_by_css_selector(".city_overview div")
 		search.click()
-		print("Se vizualizeaza orasul")
+		print("Orasul este inspectat.")
 		time.sleep(2)
 	except:
-		print("Vizualizarea orasului nu este posibila")
+		print("Inspectarea orasului a esuat.")
 
 def view_island(br):
 	try:
@@ -138,9 +140,9 @@ def view_island(br):
 		search.click()
 		search = br.find_element_by_css_selector(".btn_jump_to_town div")
 		search.click()
-		print("Se vizualizeaza insula")
+		print("Insula este inspectata.")
 	except:
-		print("Vizualizarea insulei nu este posibila")
+		print("Inspectarea insulei a esuat.")
 	time.sleep(4)
 
 
@@ -154,7 +156,7 @@ def get_town_info(br):
 			silver = br.find_element_by_css_selector(".ui_resources_bar .iron .amount").text
 			global pop
 			pop = br.find_element_by_css_selector(".ui_resources_bar .population .amount").text
-			print("Informatii despre oras:\n Lemn: " + wood + " | Piatra: "  + stone + " | Argint: "  + silver + " | Populatia: "  + pop + " " )
+			print("Informatiile orasului:\n Lemn: " + wood + " | Piatra: "  + stone + " | Argint: "  + silver + " | Populatie: "  + pop + " " )
 	except:
 		print("Imposibil de gasit resursele orasului!")
 
@@ -162,28 +164,28 @@ def speed_construction(br):
 	try:
 		free = br.find_element_by_css_selector(".btn_time_reduction .type_free")
 		free.click()
-		print("Lista lucrarilor a fost accelerata")
+		print("Lista de constructii accelerata.")
 		time.sleep(3)
 	except:
-		print("Nu se poate accelera lista lucrarilor")
+		print("Nu se poate accelera lista de constructii.")
 
 def get_population(br):
 	if int(pop) <= 20:
-		print("Atentie, populatia are un numar scazut!")
+		print("Atentie, populatia este scazuta!")
 		br.execute_script("BuildingMain.buildBuilding('farm', 20);")
 
 	time.sleep(2)
 
-def coda_edifici(br):
+def check_buildings(br):
 	webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
 	try:
 		senate = br.find_element_by_xpath("//*[@id='building_main_area_main']")
 		senate.click()
-		print("Se vizualizeaza senatul.")
+		print("Senatul este inspectat.")
 		err_senate = False
 		time.sleep(2)
 	except:
-		print("Vizualizarea senatului nu este disponibila.")
+		print("Inspectarea senatului nu este posibila.")
 		err_senate = True
 
 
@@ -198,22 +200,22 @@ def coda_edifici(br):
 		print (matrix_buildings_real[n_city])
 
 		for num_building in range(0, 13):
-			reale = matrix_buildings_real[n_city][num_building]
-			ideale = matrix_buildings[n_city][num_building]
-			if(reale < ideale):
-				print("Cladirea "+ building_names_romana[num_building] +" subdezvoltata cu %d nivele" % (ideale-reale))
+			real = matrix_buildings_real[n_city][num_building]
+			ideal = matrix_buildings[n_city][num_building]
+			if(real < ideal):
+				print("Cladirea "+ building_names_romana[num_building] +" subdezvoltata cu %d nivele." % (ideal-real))
 				comando_up = "BuildingMain.buildBuilding('"+building_names[num_building]+"', 50);"
 				br.execute_script(comando_up)
 	webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
-	print("Adaugarea constructiilor finalizata")
+	print("Am terminat de marit cladirile.")
 	time.sleep(5)
 
-def farmer(br):
-	villaggi = br.find_elements_by_xpath("//*[@data-same_island='true']")
-	print("Am gasit %d sate." % len(villaggi))
+def collect_resources(br):
+	villages = br.find_elements_by_xpath("//*[@data-same_island='true']")
+	print("Found %d villages." % len(villages))
 	i = 0
-	for villaggio in villaggi:
-		print("Actionez in satul: " + str(i + 1))
+	for village in villages:
+		print("Actionez in orasul: " + str(i + 1))
 		webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
 		time.sleep(rand_time()+1)
 		search = br.find_elements_by_xpath("//*[@data-same_island='true']") #.owned
@@ -224,13 +226,13 @@ def farmer(br):
 				try:
 					sc.click()
 				except:
-					print("Nu se poate deschide panoul satului.")
+					print("Nu pot deschide panoul satului.")
 				time.sleep(rand_time())
 				try:
 					ele = br.find_element_by_css_selector(".card_click_area")
 					ele.click()
 				except:
-					print("Nu se pot colecta resursele.")
+					print("Nu pot colecta resursele satului.")
 				time.sleep(rand_time())
 				webdriver.ActionChains(br).send_keys(Keys.ESCAPE).perform()
 		i += 1
@@ -239,15 +241,15 @@ def farmer(br):
 
 def footer(br):
 	end = time.time()
-	print("Durata: " + str(int(end - start)))
+	print("Durata: " + str(int(end - start)) + " secunde")
 
-	waiting_time = TEMPO - (int(end - start))*0.80
+	waiting_time = WAIT_TIME - (int(end - start))*0.80
 	if(waiting_time < 5):
 			waiting_time = 5
 
 	random_time = rand_time()*3.14+rand_time()*7/5 +rand_time()*19/7+20
 	wait_time = int(waiting_time) + int(random_time)
-	print("Urmatoarul ciclu in " + str(wait_time) + " secunde")
+	print("Next cycle in " + str(wait_time) + " seconds")
 	y = 0.05
 	z = 0
 	for i in range(0, wait_time):
@@ -255,7 +257,7 @@ def footer(br):
 			z+= 1
 			y+= 0.05
 		percent_done = 100 - int((wait_time - i)/wait_time * 100)
-		print("Timp trecut["+ "▇" * z + " " *(20-z) + "] " + str(percent_done) + "%" + " " + str(wait_time - i) + " secunde", end="\r")
+		print("Timp petrecut["+ "▇" * z + " " *(20-z) + "] " + str(percent_done) + "%" + " " + str(wait_time - i) + " secunde", end="\r")
 		
 
 		time.sleep(1)
@@ -272,7 +274,7 @@ def footer(br):
 
 
 
-TEMPO = 300    # 5 minute de pauza intre cicluri
+WAIT_TIME = 300    # 5 minute de pauza intre cicluri
 #br = webdriver.Chrome()
 
 
@@ -285,8 +287,8 @@ br = webdriver.Chrome(executable_path="chromedriver.exe")
 
 
 #start it up
-print("Se deschide chrome....")
-br.get("https://ro.grepolis.com/")
+print("Se deschide Chrome....")
+br.get(url)
 time.sleep(3)
 
 
@@ -303,22 +305,24 @@ while(True):
 		for n_city in range(0, towns_number):
 
 
-			print("Lucrez in orasul: "+get_city_name(br))
+			print("Lucrez in satul: "+get_city_name(br))
 
 			view_town(br)
 			get_town_info(br)
 			speed_construction(br)
 			get_population(br)
-			coda_edifici(br)
+			
+			check_buildings(br)
 
 			view_island(br)
-			farmer(br)
+			collect_resources(br)
 
 			next_town(br)
 
 
 		footer(br)
 	except:
-		print("Eroare bot!!!")
+		print("BOT ERROR!!!")
+		br.get(url)
 		login(br)
 		time.sleep(30)
