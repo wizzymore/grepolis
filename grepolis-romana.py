@@ -216,7 +216,7 @@ def check_buildings(br):
 
 def collect_resources(br):
 	villages = br.find_elements_by_xpath("//*[@data-same_island='true']")
-	print("Found %d villages." % len(villages))
+	print("Am gasit %d sate." % len(villages))
 	i = 0
 	for village in villages:
 		print("Actionez in orasul: " + str(i + 1))
@@ -253,7 +253,7 @@ def footer(br):
 
 	random_time = rand_time()*3.14+rand_time()*7/5 +rand_time()*19/7+20
 	wait_time = int(waiting_time) + int(random_time)
-	print("Next cycle in " + str(wait_time) + " seconds")
+	print("Urmatorul ciclu in " + str(wait_time) + " secunde")
 	y = 0.05
 	z = 0
 	for i in range(0, wait_time):
